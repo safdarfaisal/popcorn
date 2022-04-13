@@ -27,5 +27,14 @@ public class BookingAgent {
     public List<Theater> showTheaters() {
         return dbConnection.listTheaters();
     }
+    public List<HallClass> showClassPrice(int scheduleID) {
+        return dbConnection.listPrices(scheduleID);
+    }
+    public List<Integer> showAvailableSeats(int scheduleID, int hallClassID){
+        return dbConnection.listAvailableSeats(scheduleID, hallClassID);
+    }
+    public boolean bookTickets(List<Integer> listOfSeats, int hallClassID, int scheduleID){
+        return dbConnection.ticketBookingTransaction(listOfSeats, hallClassID, scheduleID);
+    }
 }
 

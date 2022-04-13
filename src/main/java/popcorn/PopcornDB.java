@@ -3,6 +3,8 @@ package main.java.popcorn;
 import java.util.LinkedList;
 import java.util.List;
 import java.sql.*;
+import java.util.UUID;
+import java.util.Iterator;
 
 public class PopcornDB {
     static final String DB_URL = "jdbc:mysql://localhost/popcorndb?useSSL=false";
@@ -11,6 +13,11 @@ public class PopcornDB {
     static final String BASIC_LIST_MOVIES_QUERY = "select * from movies";
     static final String FULL_LIST_MOVIES_QUERY = "select * from theaterNamedList where theaterName = ? and Date = ?;";
     static final String THEATER_QUERY = "select * from theaterLocationList";
+    static final String CLASS_QUERY = "select HallClassId, HallID, ClassName, TicketPrice from (HallClass join HallTime using(HallID)) join Schedule using(HallTimeId) where ScheduleID = ?";
+    static final String AVBL_SEATS_QUERY = "select seatID from classSeats cs where seatID not IN (select seatID from scheduledSeats where ScheduleID = ?) and HallClassID = ?;";
+    static final String ADD_TICKET_QUERY = "INSERT INTO tickets (TicketID, HallClassID, ScheduleID) VALUES (?, ?, ?);";
+    static final String ADD_TICKET_ROW_QUERY = "Insert INTO ticketrows (TicketID, SeatID) VALUES (?, ?);";
+
 
     public List<Movie> listMovies() {
         List<Movie> listOfMovies = new LinkedList<>();
@@ -62,27 +69,118 @@ public class PopcornDB {
     }
     
     public List<Theater> listTheaters() {
-        List<Theater> listOfTheaters = new LinkedList<>();
+      List<Theater> listOfTheaters = new LinkedList<>();
+      try {
+          Class.forName("com.mysql.cj.jdbc.Driver").getConstructor().newInstance();
+          Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+          Statement stmt = conn.createStatement();
+          ResultSet rs = stmt.executeQuery(THEATER_QUERY);
+          // Extract data from result set
+          while (rs.next()) {
+              Theater newTheater = new Theater(rs.getInt("theaterID"), rs.getString("TheaterName"), rs.getString("LocationName"));
+              listOfTheaters.add(newTheater);
+              // Retrieve by column name
+              // System.out.print("ID: " + rs.getInt("MovieID"));
+              // System.out.print(", Name: " + rs.getString("Name"));
+          }
+          conn.close();
+      } catch (Exception e) {
+          e.printStackTrace();
+      }
+      return listOfTheaters;
+    }
+
+    public List<HallClass> listPrices(int scheduleID){
+      List<HallClass> listOfClasses = new LinkedList<>();
+      try {
+        Class.forName("com.mysql.cj.jdbc.Driver").getConstructor().newInstance();
+        Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+        PreparedStatement stmt = conn.prepareStatement(CLASS_QUERY);
+        stmt.setInt(1, scheduleID);
+        ResultSet rs = stmt.executeQuery();
+        // Extract data from result set
+        while (rs.next()) {
+            HallClass newClass = new HallClass(rs.getInt("HallClassID"), rs.getString("ClassName"),
+                    rs.getInt("TicketPrice"));
+            listOfClasses.add(newClass);
+            // Retrieve by column name
+            // System.out.print("ID: " + rs.getInt("MovieID"));
+            // System.out.print(", Name: " + rs.getString("Name"));
+        }
+        conn.close();
+      } catch (Exception e) {
+          e.printStackTrace();
+      }
+    return listOfClasses;
+    }
+    public List<Integer> listAvailableSeats(int scheduleID, int hallClassID){
+      List<Integer> listOfSeats = new LinkedList<>();
+      try {
+        Class.forName("com.mysql.cj.jdbc.Driver").getConstructor().newInstance();
+        Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+        PreparedStatement stmt = conn.prepareStatement(AVBL_SEATS_QUERY);
+        stmt.setInt(1, scheduleID);
+        stmt.setInt(2, hallClassID);
+        ResultSet rs = stmt.executeQuery();
+        // Extract data from result set
+        while (rs.next()) {
+            listOfSeats.add(rs.getInt("SeatID"));
+            // Retrieve by column name
+            // System.out.print("ID: " + rs.getInt("MovieID"));
+            // System.out.print(", Name: " + rs.getString("Name"));
+        }
+        conn.close();
+      } catch (Exception e) {
+          e.printStackTrace();
+      }
+    return listOfSeats;
+    }
+
+    public boolean ticketBookingTransaction(List<Integer> listOfSeatIDs, int hallClassID, int scheduleID){
+      try{
+        Class.forName("com.mysql.cj.jdbc.Driver").getConstructor().newInstance();
+        Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver").getConstructor().newInstance();
-            Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(THEATER_QUERY);
-            // Extract data from result set
-            while (rs.next()) {
-                Theater newTheater = new Theater(rs.getInt("theaterID"), rs.getString("TheaterName"), rs.getString("LocationName"));
-                listOfTheaters.add(newTheater);
-                // Retrieve by column name
-                // System.out.print("ID: " + rs.getInt("MovieID"));
-                // System.out.print(", Name: " + rs.getString("Name"));
-            }
-            conn.close();
+          UUID uuid=UUID.randomUUID();
+          
+          PreparedStatement ticketstmt = conn.prepareStatement(ADD_TICKET_QUERY);
+          PreparedStatement rowstmt = conn.prepareStatement(ADD_TICKET_ROW_QUERY);
+          conn.setAutoCommit(false);
+          ticketstmt.setString(1, uuid.toString());
+          ticketstmt.setInt(2, hallClassID);
+          ticketstmt.setInt(3, scheduleID);
+          ticketstmt.executeUpdate();
+          
+          Iterator<Integer> seatIDiterator = listOfSeatIDs.iterator();
+          while(seatIDiterator.hasNext()){
+            rowstmt.setString(1, uuid.toString());
+            rowstmt.setInt(2, seatIDiterator.next());
+            System.out.println("Hello");
+            rowstmt.addBatch();
+          }
+          rowstmt.executeBatch();
+          conn.commit();
+          conn.setAutoCommit(true);
+          conn.close();
+          System.out.println("Hello");
+          return true;
         } catch (Exception e) {
             e.printStackTrace();
-        }
-        return listOfTheaters;
-    }
-    
+            if(conn != null){
+              try{
+                conn.rollback();
+              } catch (SQLException b){
+                b.printStackTrace();
+              }
+            }
+            return false;
+        }    
+      } catch (Exception e){
+        e.printStackTrace();
+        return false;
+      }
+    } 
+
 }
 
 

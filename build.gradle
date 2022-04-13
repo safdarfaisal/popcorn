@@ -16,3 +16,12 @@ dependencies {
     implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.15'
     runtimeOnly "mysql:mysql-connector-java:8.0.15"
 }
+
+jar {
+  manifest {
+    attributes(
+        'Class-Path': configurations.runtimeClasspath.files.collect { it.getName() }.join(' '),
+        'Main-Class': 'main.java.popcorn.PopcornApp'
+    )
+  }
+}
