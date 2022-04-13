@@ -1848,16 +1848,16 @@ INSERT INTO Tickets (TicketID, HallClassID, ScheduleID) VALUES ("a62ffcd5-b26f-4
 INSERT INTO Tickets (TicketID, HallClassID, ScheduleID) VALUES ("c871b34c-b571-4474-b9d6-0313fa8c46de", 17, 117);
 INSERT INTO Tickets (TicketID, HallClassID, ScheduleID) VALUES ("7b900a72-96fe-4e51-94fc-38082ab10642", 41, 285);
 --
-INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (1, 1, 304);
-INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (2, 2, 734);
-INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (3, 2, 735);
-INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (4, 2, 736);
-INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (5, 3, 708);
-INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (6, 3, 709);
-INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (7, 4, 561);
-INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (8, 5, 160);
-INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (9, 6, 401);
-INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (10,6, 402);
-INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (11, 6, 403);
-INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (12, 7, 894);
+INSERT INTO ticketrows (RowID, TicketPrKey, SeatID) VALUES (1, 1, 304);
+INSERT INTO ticketrows (RowID, TicketPrKey, SeatID) VALUES (2, 2, 734);
+INSERT INTO ticketrows (RowID, TicketPrKey, SeatID) VALUES (3, 2, 735);
+INSERT INTO ticketrows (RowID, TicketPrKey, SeatID) VALUES (4, 2, 736);
+INSERT INTO ticketrows (RowID, TicketPrKey, SeatID) VALUES (5, 3, 708);
+INSERT INTO ticketrows (RowID, TicketPrKey, SeatID) VALUES (6, 3, 709);
+INSERT INTO ticketrows (RowID, TicketPrKey, SeatID) VALUES (7, 4, 561);
+INSERT INTO ticketrows (RowID, TicketPrKey, SeatID) VALUES (8, 5, 160);
+INSERT INTO ticketrows (RowID, TicketPrKey, SeatID) VALUES (9, 6, 401);
+INSERT INTO ticketrows (RowID, TicketPrKey, SeatID) VALUES (10,6, 402);
+INSERT INTO ticketrows (RowID, TicketPrKey, SeatID) VALUES (11, 6, 403);
+INSERT INTO ticketrows (RowID, TicketPrKey, SeatID) VALUES (12, 7, 894);
 
