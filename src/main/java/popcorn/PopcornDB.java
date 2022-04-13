@@ -21,6 +21,7 @@ public class PopcornDB {
     static final String TICKET_DELETE_QUERY = "delete from Tickets where TicketId = ?;";
     static final String SEAT_DELETE_QUERY = "delete from TicketRows where SeatId = ? and TicketPrKey = ?;";
     static final String TICKET_ALL_SEATS_DELETE_QUERY = "delete from TicketRows where TicketPrKey = ?;";
+    static final String TICKET_SEAT_COUNT_QUERY = "select count(RowID) from ticketrows where TicketPrKey = ?;";
 
     public List<Movie> listMovies() {
         List<Movie> listOfMovies = new LinkedList<>();
@@ -259,6 +260,8 @@ public class PopcornDB {
                     conn.prepareStatement(SEAT_DELETE_QUERY);
                 PreparedStatement ticketkeystmt =
                     conn.prepareStatement(TICKET_PRKEY_QUERY);
+                PreparedStatement seatcountstmt =
+                    conn.prepareStatement(TICKET_SEAT_COUNT_QUERY);
                 conn.setAutoCommit(false);
                 ticketkeystmt.setString(1, ticketId);
                 ResultSet rs = ticketkeystmt.executeQuery();
@@ -280,6 +283,26 @@ public class PopcornDB {
                     rowstmt.addBatch();
                 }
                 rowstmt.executeBatch();
+                seatcountstmt.setInt(1, ticketKey);
+                rs = seatcountstmt.executeQuery();
+                // only one value, Extract data from result set
+                int seatCount = -1;
+                while (rs.next()) {
+                    seatCount = rs.getInt(1);
+                    break;
+                }
+                if (seatCount == -1) {
+                    conn.rollback();
+                    conn.close();
+                    return false;
+                }
+                if (seatCount == 0) {
+                    //no seats any more, delete ticket
+                    PreparedStatement ticketstmt =
+                        conn.prepareStatement(TICKET_DELETE_QUERY);
+                    ticketstmt.setString(1, ticketId);
+                    ticketstmt.executeUpdate();
+                }
                 conn.commit();
                 conn.setAutoCommit(true);
                 conn.close();

@@ -34,7 +34,6 @@ public class BookingAgent {
         return dbConnection.listAvailableSeats(scheduleID, hallClassID);
     }
     public boolean bookTickets(List<Integer> listOfSeats, int hallClassID, int scheduleID){
-        System.out.println("Hello1");
         return dbConnection.ticketBookingTransaction(listOfSeats, hallClassID, scheduleID);
     }
 

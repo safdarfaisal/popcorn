@@ -54,13 +54,11 @@ public class PopcornCLI {
                 List<Integer> seatList = new LinkedList<>();
                 selectorInput.nextLine();
                 if (selectorInput.hasNextLine()) {
-                    System.out.println("Cello");
                     String numbers = selectorInput.nextLine();
                     String[] tokens = numbers.split(" ");
                     for (String token : tokens){
                         seatList.add(Integer.parseInt(token)); 
                     }
-                    System.out.println("Bello");
                 }
                 
                 // while(selectorInput.hasNext()){
@@ -77,7 +75,7 @@ public class PopcornCLI {
 
                 bookingAgent.bookTickets(seatList, hallClassID, scheduleID);
                 break;
-            case 3:
+            case 3:              
                 cancelTickets(selectorInput, bookingAgent);
                 break;
             case 4:
@@ -166,6 +164,7 @@ public class PopcornCLI {
 
     public static void cancelTicketSeats(Scanner sc, BookingAgent agent)
     {
+        
         String ticketId = getTicketId(sc);
         List<Integer> seatList = getSeats(sc, "Enter IDs of seats that you want to cancel (space separated):\n");
         agent.cancelTicket(ticketId, seatList);
@@ -184,15 +183,12 @@ public class PopcornCLI {
     private static List<Integer> getSeats(Scanner sc, String prompt) {
         System.out.println(prompt);
         List<Integer> seatList = new LinkedList<>();
-        sc.nextLine();
         if (sc.hasNextLine()) {
-            System.out.println("Cello");
             String numbers = sc.nextLine();
             String[] tokens = numbers.split(" ");
             for (String token : tokens){
                 seatList.add(Integer.parseInt(token)); 
             }
-            System.out.println("Bello");
         }
         return seatList;
     }
