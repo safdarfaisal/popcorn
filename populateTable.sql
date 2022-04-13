@@ -1848,16 +1848,16 @@ INSERT INTO Tickets (TicketID, HallClassID, ScheduleID) VALUES ("a62ffcd5-b26f-4
 INSERT INTO Tickets (TicketID, HallClassID, ScheduleID) VALUES ("c871b34c-b571-4474-b9d6-0313fa8c46de", 17, 117);
 INSERT INTO Tickets (TicketID, HallClassID, ScheduleID) VALUES ("7b900a72-96fe-4e51-94fc-38082ab10642", 41, 285);
 --
-INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (1, "e192a0b2-fd48-45ed-b19c-15c24f698ccd", 304);
-INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (2, "f343befb-c091-4b05-bf83-b274856c6871", 734);
-INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (3, "f343befb-c091-4b05-bf83-b274856c6871", 735);
-INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (4, "f343befb-c091-4b05-bf83-b274856c6871", 736);
-INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (5, "416c236c-db7b-4c9b-8946-7dbaf39b30a8", 708);
-INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (6, "416c236c-db7b-4c9b-8946-7dbaf39b30a8", 709);
-INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (7, "399a40b0-7057-40b7-b79d-4a37abd5d6c5", 561);
-INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (8, "a62ffcd5-b26f-427f-9459-e11e7b501dc7", 160);
-INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (9, "c871b34c-b571-4474-b9d6-0313fa8c46de", 401);
-INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (10, "c871b34c-b571-4474-b9d6-0313fa8c46de", 402);
-INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (11, "c871b34c-b571-4474-b9d6-0313fa8c46de", 403);
-INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (12, "7b900a72-96fe-4e51-94fc-38082ab10642", 894);
+INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (1, 1, 304);
+INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (2, 2, 734);
+INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (3, 2, 735);
+INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (4, 2, 736);
+INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (5, 3, 708);
+INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (6, 3, 709);
+INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (7, 4, 561);
+INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (8, 5, 160);
+INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (9, 6, 401);
+INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (10,6, 402);
+INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (11, 6, 403);
+INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (12, 7, 894);
 
