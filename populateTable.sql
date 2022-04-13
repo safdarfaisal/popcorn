@@ -1,15 +1,14 @@
-DELETE FROM classseats;
-DELETE FROM hallclass;
-DELETE FROM halls;
+DELETE FROM TicketRows;
+DELETE FROM Tickets;
+DELETE FROM ClassSeats;
+DELETE FROM Schedule;
 DELETE FROM halltime;
-DELETE FROM locations;
-DELETE FROM movies;
-DELETE FROM movieschedule;
-DELETE FROM schedule;
-DELETE FROM theater;
-DELETE FROM ticketrows;
-DELETE FROM tickets;
---
+DELETE FROM HallClass;
+DELETE FROM Halls;
+DELETE FROM Theater;
+DELETE FROM Movies;
+DELETE FROM Locations;
+
 INSERT INTO Locations (LocationID, Name) VALUES (1, 'Pilani');
 INSERT INTO Locations (LocationID, Name) VALUES (2, 'Delhi');
 INSERT INTO Locations (LocationID, Name) VALUES (3, 'Kochi');
@@ -103,12 +102,10 @@ INSERT INTO HallClass (HallClassID, HallID, ClassName, TicketPrice) VALUES (42, 
 INSERT INTO HallClass (HallClassID, HallID, ClassName, TicketPrice) VALUES (43, 19, 'D1', 140);
 INSERT INTO HallClass (HallClassID, HallID, ClassName, TicketPrice) VALUES (44, 20, 'D1', 110);
 INSERT INTO HallClass (HallClassID, HallID, ClassName, TicketPrice) VALUES (45, 21, 'D1', 140);
-INSERT INTO HallClass (HallClassID, HallID, ClassName, TicketPrice) VALUES (43, 21, 'D2', 160);
-INSERT INTO HallClass (HallClassID, HallID, ClassName, TicketPrice) VALUES (44, 22, 'D1', 110);
-INSERT INTO HallClass (HallClassID, HallID, ClassName, TicketPrice) VALUES (45, 23, 'D1', 140);
-INSERT INTO HallClass (HallClassID, HallID, ClassName, TicketPrice) VALUES (46, 23, 'D2', 160);
-INSERT INTO HallClass (HallClassID, HallID, ClassName, TicketPrice) VALUES (47, 24, 'D1', 110);
-INSERT INTO HallClass (HallClassID, HallID, ClassName, TicketPrice) VALUES (48, 24, 'D2', 130);
+INSERT INTO HallClass (HallClassID, HallID, ClassName, TicketPrice) VALUES (46, 22, 'D1', 160);
+INSERT INTO HallClass (HallClassID, HallID, ClassName, TicketPrice) VALUES (47, 23, 'D1', 110);
+INSERT INTO HallClass (HallClassID, HallID, ClassName, TicketPrice) VALUES (48, 24, 'D1', 140);
+
 --
 INSERT INTO HallTime (HallTimeID, HallID, Timing) VALUES (1, 1, '12:40');
 INSERT INTO HallTime (HallTimeID, HallID, Timing) VALUES (2, 1, '15:40');
@@ -1843,24 +1840,24 @@ INSERT INTO ClassSeats (SeatID, HallClassID, SeatLabel) VALUES (1024, 48, '10');
 INSERT INTO ClassSeats (SeatID, HallClassID, SeatLabel) VALUES (1025, 48, '11');
 INSERT INTO ClassSeats (SeatID, HallClassID, SeatLabel) VALUES (1026, 48, '12');
 --
-INSERT INTO Tickets (TicketID, HallClassID, ScheduleID) VALUES (18492, 12, 78);
-INSERT INTO Tickets (TicketID, HallClassID, ScheduleID) VALUES (18832, 35, 242);
-INSERT INTO Tickets (TicketID, HallClassID, ScheduleID) VALUES (19822, 33, 228);
-INSERT INTO Tickets (TicketID, HallClassID, ScheduleID) VALUES (19472, 24, 162);
-INSERT INTO Tickets (TicketID, HallClassID, ScheduleID) VALUES (29452, 6, 36);
-INSERT INTO Tickets (TicketID, HallClassID, ScheduleID) VALUES (45962, 17, 117);
-INSERT INTO Tickets (TicketID, HallClassID, ScheduleID) VALUES (12914, 41, 285);
+INSERT INTO Tickets (TicketID, HallClassID, ScheduleID) VALUES ("e192a0b2-fd48-45ed-b19c-15c24f698ccd", 12, 78);
+INSERT INTO Tickets (TicketID, HallClassID, ScheduleID) VALUES ("f343befb-c091-4b05-bf83-b274856c6871", 35, 242);
+INSERT INTO Tickets (TicketID, HallClassID, ScheduleID) VALUES ("416c236c-db7b-4c9b-8946-7dbaf39b30a8", 33, 228);
+INSERT INTO Tickets (TicketID, HallClassID, ScheduleID) VALUES ("399a40b0-7057-40b7-b79d-4a37abd5d6c5", 24, 162);
+INSERT INTO Tickets (TicketID, HallClassID, ScheduleID) VALUES ("a62ffcd5-b26f-427f-9459-e11e7b501dc7", 6, 36);
+INSERT INTO Tickets (TicketID, HallClassID, ScheduleID) VALUES ("c871b34c-b571-4474-b9d6-0313fa8c46de", 17, 117);
+INSERT INTO Tickets (TicketID, HallClassID, ScheduleID) VALUES ("7b900a72-96fe-4e51-94fc-38082ab10642", 41, 285);
 --
-INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (1, 18492, 304);
-INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (2, 18832, 734);
-INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (3, 18832, 735);
-INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (4, 18832, 736);
-INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (5, 19822, 708);
-INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (6, 19822, 709);
-INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (7, 19472, 561);
-INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (8, 29452, 160);
-INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (9, 45962, 401);
-INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (10, 45962, 402);
-INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (11, 45962, 403);
-INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (12, 12914, 894);
+INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (1, "e192a0b2-fd48-45ed-b19c-15c24f698ccd", 304);
+INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (2, "f343befb-c091-4b05-bf83-b274856c6871", 734);
+INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (3, "f343befb-c091-4b05-bf83-b274856c6871", 735);
+INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (4, "f343befb-c091-4b05-bf83-b274856c6871", 736);
+INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (5, "416c236c-db7b-4c9b-8946-7dbaf39b30a8", 708);
+INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (6, "416c236c-db7b-4c9b-8946-7dbaf39b30a8", 709);
+INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (7, "399a40b0-7057-40b7-b79d-4a37abd5d6c5", 561);
+INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (8, "a62ffcd5-b26f-427f-9459-e11e7b501dc7", 160);
+INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (9, "c871b34c-b571-4474-b9d6-0313fa8c46de", 401);
+INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (10, "c871b34c-b571-4474-b9d6-0313fa8c46de", 402);
+INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (11, "c871b34c-b571-4474-b9d6-0313fa8c46de", 403);
+INSERT INTO ticketrows (RowID, TicketID, SeatID) VALUES (12, "7b900a72-96fe-4e51-94fc-38082ab10642", 894);
 

@@ -20,23 +20,45 @@
 
 ## Database Design
 - Required Data
-    - Films
+    - Movies
+        - Movie Id
         - Name
         - Rating
         - Synopsis
     - Theaters
+        - Theater ID
         - Name
-        - Location
-        - Number of Halls
-        - Cities
+    - Locations
         - Name
-    - Customers
+    <!-- - Customers(If log-in Implemented)
         - Name
         - Address
         - Username(?)
-        -
-    - Screening Halls 
-    - Ticket Invoices
+        - -->
+    - Ticket classes
+        - Class ID
+        - Hall ID
+        - Price
+        - Number of Seats
+    - Seats
+        - Seat ID
+        - Booking Status
+    - Screening Halls
+        - Hall ID
+        - Name 
+    - Tickets
+        - Ticket ID
+        - Class
+        - Seat
+        
+
+Relations Model
+
+- Movie-Hall 
+- Hall-Theater
+- Classes-Hall
+- Seat-Ticket 
+- 
 
 
 
