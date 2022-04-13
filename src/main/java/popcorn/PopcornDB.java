@@ -16,8 +16,8 @@ public class PopcornDB {
     static final String CLASS_QUERY = "select HallClassId, HallID, ClassName, TicketPrice from (HallClass join HallTime using(HallID)) join Schedule using(HallTimeId) where ScheduleID = ?";
     static final String AVBL_SEATS_QUERY = "select seatID from classSeats cs where seatID not IN (select seatID from scheduledSeats where ScheduleID = ?) and HallClassID = ?;";
     static final String ADD_TICKET_QUERY = "INSERT INTO tickets (TicketID, HallClassID, ScheduleID) VALUES (?, ?, ?);";
-    static final String ADD_TICKET_ROW_QUERY = "Insert INTO ticketrows (TicketID, SeatID) VALUES (?, ?);";
-
+    static final String ADD_TICKET_ROW_QUERY = "Insert INTO ticketrows (TicketPrKey, SeatID) VALUES (?, ?);";
+    static final String TICKET_PRKEY_QUERY = "select TicketPrKey from Tickets where TicketId = ?;";
 
     public List<Movie> listMovies() {
         List<Movie> listOfMovies = new LinkedList<>();
@@ -142,18 +142,31 @@ public class PopcornDB {
         Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
         try {
           UUID uuid=UUID.randomUUID();
-          
+          System.out.println("Hello");
           PreparedStatement ticketstmt = conn.prepareStatement(ADD_TICKET_QUERY);
           PreparedStatement rowstmt = conn.prepareStatement(ADD_TICKET_ROW_QUERY);
+          PreparedStatement ticketkeystmt = conn.prepareStatement(TICKET_PRKEY_QUERY);
           conn.setAutoCommit(false);
           ticketstmt.setString(1, uuid.toString());
           ticketstmt.setInt(2, hallClassID);
           ticketstmt.setInt(3, scheduleID);
           ticketstmt.executeUpdate();
-          
+          ticketkeystmt.setString(1, uuid.toString());
+          ResultSet rs = ticketkeystmt.executeQuery();
+          // only one value, Extract data from result set
+          int ticketKey = 0;
+          while (rs.next()) {
+              ticketKey = rs.getInt("TicketPrKey");
+              break;
+          }
+          if (ticketKey == 0) {
+              conn.rollback();
+              conn.close();
+              return false;
+          }
           Iterator<Integer> seatIDiterator = listOfSeatIDs.iterator();
           while(seatIDiterator.hasNext()){
-            rowstmt.setString(1, uuid.toString());
+            rowstmt.setInt(1, ticketKey);
             rowstmt.setInt(2, seatIDiterator.next());
             System.out.println("Hello");
             rowstmt.addBatch();

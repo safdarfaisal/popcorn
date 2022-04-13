@@ -52,9 +52,29 @@ public class PopcornCLI {
                 displaySeats(bookingAgent.showAvailableSeats(scheduleID, hallClassID));
                 System.out.println("Enter all seats you would like to book (using space separated values).");
                 List<Integer> seatList = new LinkedList<>();
-                while(selectorInput.hasNextInt()){
-                    seatList.add(selectorInput.nextInt());
-                }    
+                selectorInput.nextLine();
+                if (selectorInput.hasNextLine()) {
+                    System.out.println("Cello");
+                    String numbers = selectorInput.nextLine();
+                    String[] tokens = numbers.split(" ");
+                    for (String token : tokens){
+                        seatList.add(Integer.parseInt(token)); 
+                    }
+                    System.out.println("Bello");
+                }
+                
+                // while(selectorInput.hasNext()){
+                //     System.out.println("Cello");
+                //     if(selectorInput.hasNextInt()){
+                //         seatList.add(selectorInput.nextInt());
+                //     }
+                //     else {
+                //         selectorInput.next();
+                //     }
+                //     System.out.println("Bello");
+                // }
+                
+
                 bookingAgent.bookTickets(seatList, hallClassID, scheduleID);
                 break;
             case 3:
