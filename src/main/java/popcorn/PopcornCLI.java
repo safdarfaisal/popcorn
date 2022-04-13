@@ -13,7 +13,7 @@ public class PopcornCLI {
         System.out.println("1. Show list of movies\n");
         System.out.println("2. Book a movie on a specific date and theater\n");
         System.out.println("3. Cancel booked ticket\n");
-        System.out.println("4. Cancel specific tickets within a booking\n");
+        System.out.println("4. Cancel specific seats within a ticket\n");
         System.out.println("5. Exit\n");
        
         int selector = 0;
@@ -78,10 +78,10 @@ public class PopcornCLI {
                 bookingAgent.bookTickets(seatList, hallClassID, scheduleID);
                 break;
             case 3:
-                
+                cancelTickets(selectorInput, bookingAgent);
                 break;
             case 4:
-                
+                cancelTicketSeats(selectorInput, bookingAgent);
                 break;
             case 5:
                 
@@ -157,6 +157,43 @@ public class PopcornCLI {
             );
         }
         System.out.println("");
+    }
 
+    public static void cancelTickets(Scanner sc, BookingAgent agent)
+    {
+        agent.cancelTicket(getTicketId(sc), null);
+    }
+
+    public static void cancelTicketSeats(Scanner sc, BookingAgent agent)
+    {
+        String ticketId = getTicketId(sc);
+        List<Integer> seatList = getSeats(sc, "Enter IDs of seats that you want to cancel (space separated):\n");
+        agent.cancelTicket(ticketId, seatList);
+    }
+
+    private static String getTicketId(Scanner sc) {
+        String ticketId = "";
+        System.out.println("Enter ID of the ticket that you want to cancel:\n");
+        sc.nextLine();
+        if (sc.hasNextLine()) {
+            ticketId = sc.nextLine();
+        }
+        return ticketId;
+    }
+
+    private static List<Integer> getSeats(Scanner sc, String prompt) {
+        System.out.println(prompt);
+        List<Integer> seatList = new LinkedList<>();
+        sc.nextLine();
+        if (sc.hasNextLine()) {
+            System.out.println("Cello");
+            String numbers = sc.nextLine();
+            String[] tokens = numbers.split(" ");
+            for (String token : tokens){
+                seatList.add(Integer.parseInt(token)); 
+            }
+            System.out.println("Bello");
+        }
+        return seatList;
     }
 }

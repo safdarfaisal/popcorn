@@ -37,5 +37,12 @@ public class BookingAgent {
         System.out.println("Hello1");
         return dbConnection.ticketBookingTransaction(listOfSeats, hallClassID, scheduleID);
     }
+
+    public boolean cancelTicket(String ticketId, List<Integer> seatList) {
+        if (seatList == null || seatList.isEmpty()) {
+            return dbConnection.fullTicketDeleteTransaction(ticketId);
+        }
+        return dbConnection.cancelSeatsTransaction(ticketId, seatList);
+    }
 }
 

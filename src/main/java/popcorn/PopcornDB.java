@@ -18,6 +18,9 @@ public class PopcornDB {
     static final String ADD_TICKET_QUERY = "INSERT INTO tickets (TicketID, HallClassID, ScheduleID) VALUES (?, ?, ?);";
     static final String ADD_TICKET_ROW_QUERY = "Insert INTO ticketrows (TicketPrKey, SeatID) VALUES (?, ?);";
     static final String TICKET_PRKEY_QUERY = "select TicketPrKey from Tickets where TicketId = ?;";
+    static final String TICKET_DELETE_QUERY = "delete from Tickets where TicketId = ?;";
+    static final String SEAT_DELETE_QUERY = "delete from TicketRows where SeatId = ? and TicketPrKey = ?;";
+    static final String TICKET_ALL_SEATS_DELETE_QUERY = "delete from TicketRows where TicketPrKey = ?;";
 
     public List<Movie> listMovies() {
         List<Movie> listOfMovies = new LinkedList<>();
@@ -194,91 +197,108 @@ public class PopcornDB {
       }
     } 
 
-}
 
-
-
-
-/*
-
-mysql -u root -pSafdar12 -h localhost --port 3306 popcorndb
-
-public class FirstExample {
-   static final String DB_URL = "jdbc:mysql://localhost/TUTORIALSPOINT";
-   static final String USER = "guest";
-   static final String PASS = "guest123";
-   static final String QUERY = "SELECT id, first, last, age FROM Employees";
-   static final String PREP_QUERY = "SELECT id, first, last, age FROM Employees WHERE age < ?";
-
-   public static void main(String[] args) {
-      // Open a connection
-      try(Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
-         Statement stmt = conn.createStatement();
-         ResultSet rs = stmt.executeQuery(QUERY);) {
-         // Extract data from result set
-         while (rs.next()) {
-            // Retrieve by column name
-            System.out.print("ID: " + rs.getInt("id"));
-            System.out.print(", Age: " + rs.getInt("age"));
-            System.out.print(", First: " + rs.getString("first"));
-            System.out.println(", Last: " + rs.getString("last"));
-         }
-         conn.close();
-      } catch (SQLException e) {
-         e.printStackTrace();
-      }
-
-      try(Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
-         PreparedStatement stmt=con.prepareStatement(PREP_QUERY);
-         stmt.setString(1, "20");
-         ResultSet rs = stmt.executeQuery();) {
-         // Extract data from result set
-         while (rs.next()) {
-            // Retrieve by column name
-            System.out.print("ID: " + rs.getInt("id"));
-            System.out.print(", Age: " + rs.getInt("age"));
-            System.out.print(", First: " + rs.getString("first"));
-            System.out.println(", Last: " + rs.getString("last"));
-         }
-         conn.close();
-      } catch (SQLException e) {
-         e.printStackTrace();
-      }
-   }
-
-   public void updateCoffeeSales(HashMap<String, Integer> salesForWeek) throws SQLException {
-    String updateString =
-      "update COFFEES set SALES = ? where COF_NAME = ?";
-    String updateStatement =
-      "update COFFEES set TOTAL = TOTAL + ? where COF_NAME = ?";
-
-    try (PreparedStatement updateSales = con.prepareStatement(updateString);
-         PreparedStatement updateTotal = con.prepareStatement(updateStatement))
-    
-    {
-      con.setAutoCommit(false);
-      for (Map.Entry<String, Integer> e : salesForWeek.entrySet()) {
-        updateSales.setInt(1, e.getValue().intValue());
-        updateSales.setString(2, e.getKey());
-        updateSales.executeUpdate();
-
-        updateTotal.setInt(1, e.getValue().intValue());
-        updateTotal.setString(2, e.getKey());
-        updateTotal.executeUpdate();
-        con.commit();
-      }
-    } catch (SQLException e) {
-      JDBCTutorialUtilities.printSQLException(e);
-      if (con != null) {
-        try {
-          System.err.print("Transaction is being rolled back");
-          con.rollback();
-        } catch (SQLException excep) {
-          JDBCTutorialUtilities.printSQLException(excep);
+    public boolean fullTicketDeleteTransaction(String ticketId) {
+        try{
+            Class.forName("com.mysql.cj.jdbc.Driver").getConstructor().newInstance();
+            Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            try {
+                PreparedStatement ticketstmt =
+                    conn.prepareStatement(TICKET_DELETE_QUERY);
+                PreparedStatement rowstmt =
+                    conn.prepareStatement(TICKET_ALL_SEATS_DELETE_QUERY);
+                PreparedStatement ticketkeystmt =
+                    conn.prepareStatement(TICKET_PRKEY_QUERY);
+                conn.setAutoCommit(false);
+                ticketkeystmt.setString(1, ticketId);
+                ResultSet rs = ticketkeystmt.executeQuery();
+                // only one value, Extract data from result set
+                int ticketKey = 0;
+                while (rs.next()) {
+                    ticketKey = rs.getInt("TicketPrKey");
+                    break;
+                }
+                if (ticketKey == 0) {
+                    conn.rollback();
+                    conn.close();
+                    return false;
+                }
+                rowstmt.setInt(1, ticketKey);
+                rowstmt.executeUpdate();
+                ticketstmt.setString(1, ticketId);
+                ticketstmt.executeUpdate();
+                conn.commit();
+                conn.setAutoCommit(true);
+                conn.close();
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                if(conn != null){
+                    try{
+                        conn.rollback();
+                    } catch (SQLException b){
+                        b.printStackTrace();
+                    }
+                }
+                return false;
+            }    
+        } catch (Exception e){
+            e.printStackTrace();
+            return false;
         }
-      }
     }
-  }
+
+
+    public boolean cancelSeatsTransaction(String ticketId,
+            List<Integer> seatList) {
+        try{
+            Class.forName("com.mysql.cj.jdbc.Driver").getConstructor().newInstance();
+            Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            try {
+                PreparedStatement rowstmt =
+                    conn.prepareStatement(SEAT_DELETE_QUERY);
+                PreparedStatement ticketkeystmt =
+                    conn.prepareStatement(TICKET_PRKEY_QUERY);
+                conn.setAutoCommit(false);
+                ticketkeystmt.setString(1, ticketId);
+                ResultSet rs = ticketkeystmt.executeQuery();
+                // only one value, Extract data from result set
+                int ticketKey = 0;
+                while (rs.next()) {
+                    ticketKey = rs.getInt("TicketPrKey");
+                    break;
+                }
+                if (ticketKey == 0) {
+                    conn.rollback();
+                    conn.close();
+                    return false;
+                }
+                Iterator<Integer> seatIDiterator = seatList.iterator();
+                while(seatIDiterator.hasNext()){
+                    rowstmt.setInt(1, seatIDiterator.next());
+                    rowstmt.setInt(2, ticketKey);
+                    rowstmt.addBatch();
+                }
+                rowstmt.executeBatch();
+                conn.commit();
+                conn.setAutoCommit(true);
+                conn.close();
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                if(conn != null){
+                    try{
+                        conn.rollback();
+                    } catch (SQLException b){
+                        b.printStackTrace();
+                    }
+                }
+                return false;
+            }    
+        } catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
 
-*/
